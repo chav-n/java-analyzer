@@ -1,0 +1,53 @@
+set	Dot
+
+state	CheckMethod
+NEW
+	common.new:
+IDENTIFIER, THIS, SUPER, CLASS
+	common.method_check:
+LESS
+	common.parameters
+	post_parameters
+	common.method_check:
+end
+
+state	CheckType
+NEW
+	common.new:
+IDENTIFIER, THIS, SUPER, CLASS
+	method.post_type:
+LESS
+	common.parameters
+	post_parameters
+	method.post_type:
+end
+
+state	CheckForType
+IDENTIFIER
+	method.for_post_type:
+end
+
+state	CheckForTypeNext
+IDENTIFIER
+	method.for_post_type_next:
+end
+
+state	CheckCast
+NEW
+	common.new
+	RPAREN:
+IDENTIFIER
+	cast.check_identifier:
+THIS, SUPER, CLASS
+	common.method_check
+	RPAREN:
+LESS
+	common.parameters
+	post_parameters
+	common.method_check
+	RPAREN:
+end
+
+state	PostParameters
+IDENTIFIER:
+end

@@ -1,0 +1,12 @@
+C:\devel\ParserJava3\def\Annotation.def
+C:\devel\ParserJava3\def\Cast.def
+C:\devel\ParserJava3\def\Class.def
+C:\devel\ParserJava3\def\Common.def
+C:\devel\ParserJava3\def\Dot.def
+C:\devel\ParserJava3\def\Enum.def
+C:\devel\ParserJava3\def\Head.def
+C:\devel\ParserJava3\def\TypeList.def
+C:\devel\ParserJava3\def\Method.def
+C:\devel\ParserJava3\def\Try.def
+C:\devel\ParserJava3\def\ValueEnd.def
+C:\devel\ParserJava3\def\list.txt

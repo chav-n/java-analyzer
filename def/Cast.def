@@ -1,0 +1,277 @@
+set	Cast
+
+state	CheckStart
+IDENTIFIER
+	check_identifier:
+INTEGER_LITERAL, LONG_LITERAL, FLOATING_POINT_LITERAL,
+	DOUBLE_LITERAL, TRUE, FALSE, NULL, CHARACTER_LITERAL
+	common.operand
+	RPAREN:
+THIS, SUPER
+	common.method_check
+	RPAREN:
+NEW
+	common.new
+	common.method_check
+	RPAREN:
+INT, LONG, FLOAT, DOUBLE,
+	CHAR, SHORT, BYTE, BOOLEAN
+	check_primitive:
+PLUS, MINUS, PLUS_PLUS,
+	MINUS_MINUS, NOT, TILDE
+	common.value
+	RPAREN:
+LPAREN
+	ext
+	common.method_check
+	RPAREN:
+STRING_LITERAL
+	common.method_check
+	RPAREN:
+end
+
+state	CheckIdentifier
+INSTANCEOF
+	common.instanceof
+	RPAREN:
+EQUAL, AND_EQUAL, OR_EQUAL, XOR_EQUAL, PLUS_EQUAL, MINUS_EQUAL,
+	MULTIPLY_EQUAL, DIVIDE_EQUAL, REMAINDER_EQUAL, LEFT_SHIFT_EQUAL,
+	RIGHT_SHIFT_EQUAL, UNSIGNED_RIGHT_SHIFT_EQUAL, PLUS, MINUS,
+	MULTIPLY, DIVIDE, REMAINDER, AND, OR, XOR, AND_AND, OR_OR,
+	EQUAL_EQUAL, LESS_EQUAL, GREATER, GREATER_EQUAL, NOT_EQUAL,
+	LEFT_SHIFT, RIGHT_SHIFT, UNSIGNED_RIGHT_SHIFT
+	common.value
+	RPAREN:
+QUESTIONMARK
+	common.value
+	value_end.tertiary_assignment
+	common.value
+	RPAREN:
+PLUS_PLUS, MINUS_MINUS
+	common.operand
+	RPAREN:
+LPAREN
+	common.value
+	value_end.arguments
+	common.post_method_check
+	RPAREN:
+RPAREN
+	check_type:
+LESS
+	check_generic:
+DOT
+	dot.check_cast:
+LSQUAREBRACKET
+	check_array:
+end
+
+state	CheckPrimitive
+DOT
+	common.post_primitive
+	RPAREN:
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	stop:
+RPAREN
+	primitive:
+end
+
+state	CheckGeneric
+IDENTIFIER
+	check_generic_identifier:
+/* CHARACTER_LITERAL: For the where a character constant is
+   used in place of its integer value. */
+INTEGER_LITERAL, LONG_LITERAL, FLOATING_POINT_LITERAL,
+	DOUBLE_LITERAL, CHARACTER_LITERAL, TRUE, FALSE, NULL
+	common.operand
+	RPAREN:
+THIS, SUPER
+	common.method_check
+	RPAREN:
+INT, LONG, FLOAT, DOUBLE,
+	CHAR, SHORT, BYTE, BOOLEAN
+	common.parameters
+	stop:
+PLUS, MINUS, PLUS_PLUS,
+	MINUS_MINUS, NOT, TILDE
+	common.value
+	RPAREN:
+STRING_LITERAL
+	common.method_check
+	RPAREN:
+LPAREN
+	common.value
+	RPAREN
+	common.method_check
+	RPAREN:
+QUESTIONMARK
+	common.parameters
+	stop:
+end
+
+state	CheckArray
+IDENTIFIER, THIS, SUPER
+	common.method_check
+	RSQUAREBRACKET
+	common.method_check
+	RPAREN:
+/* CHARACTER_LITERAL: For the where a character constant is used
+   in place of its integer value. */
+INTEGER_LITERAL, LONG_LITERAL, FLOATING_POINT_LITERAL,
+	DOUBLE_LITERAL, CHARACTER_LITERAL, TRUE, FALSE, NULL
+	common.operand
+	RSQUAREBRACKET
+	common.method_check
+	RPAREN:
+NEW
+	common.new
+	common.method_check
+	RSQUAREBRACKET
+	common.method_check
+	RPAREN:
+PLUS, MINUS, PLUS_PLUS,
+	MINUS_MINUS, NOT, TILDE
+	common.value
+	RSQUAREBRACKET
+	common.method_check
+	RPAREN:
+RSQUAREBRACKET
+	stop:
+LPAREN
+	check_start
+	common.method_check
+	RSQUAREBRACKET
+	common.operand
+	RPAREN:
+end
+
+state	CheckGenericArray
+IDENTIFIER
+	common.method_check
+	RSQUAREBRACKET
+	common.method_check
+	RPAREN:
+/* CHARACTER_LITERAL: For the where a character constant is used
+   in place of its integer value. */
+INTEGER_LITERAL, LONG_LITERAL, FLOATING_POINT_LITERAL,
+	DOUBLE_LITERAL, CHARACTER_LITERAL, TRUE, FALSE, NULL
+	common.value
+	RSQUAREBRACKET
+	common.operand
+	RPAREN:
+THIS, SUPER
+	common.method_check
+	RSQUAREBRACKET
+	common.method_check
+	RPAREN:
+NEW
+	common.new
+	common.method_check
+	RSQUAREBRACKET
+	common.method_check
+	RPAREN:
+PLUS, MINUS, PLUS_PLUS,
+	MINUS_MINUS, NOT, TILDE
+	common.value
+	RSQUAREBRACKET
+	common.value
+	RPAREN:
+RSQUAREBRACKET
+	common.parameters
+	stop:
+LPAREN
+	check_start
+	common.method_check
+	RSQUAREBRACKET
+	common.operand
+	RPAREN:
+end
+
+state	CheckGenericIdentifier
+EQUAL, AND_EQUAL, OR_EQUAL, XOR_EQUAL, PLUS_EQUAL, MINUS_EQUAL,
+	MULTIPLY_EQUAL, DIVIDE_EQUAL, REMAINDER_EQUAL, LEFT_SHIFT_EQUAL,
+	RIGHT_SHIFT_EQUAL, UNSIGNED_RIGHT_SHIFT_EQUAL, PLUS, MINUS,
+	MULTIPLY, DIVIDE, REMAINDER, AND, OR, XOR, AND_AND, OR_OR,
+	EQUAL_EQUAL, LESS_EQUAL, GREATER_EQUAL, NOT_EQUAL, LEFT_SHIFT
+	common.value
+	RPAREN:
+GREATER
+	stop:
+QUESTIONMARK
+	common.value
+	value_end.tertiary_assignment
+	common.value
+	RPAREN:
+PLUS_PLUS, MINUS_MINUS
+	common.value
+	RPAREN:
+LPAREN
+	common.value
+	value_end.arguments
+	common.post_method_check
+	RPAREN:
+RPAREN:
+COMMA
+	common.parameters
+	stop:
+LESS
+	common.parameters
+	common.parameters
+	stop:
+DOT
+	IDENTIFIER
+	ext:
+LSQUAREBRACKET
+	check_generic_array:
+end
+
+state	CheckType
+/* CHARACTER_LITERAL: For the where a character constant is used
+   in place of its integer value. */
+INTEGER_LITERAL, LONG_LITERAL, FLOATING_POINT_LITERAL,
+	DOUBLE_LITERAL, CHARACTER_LITERAL, STRING_LITERAL, TRUE, FALSE,
+	NULL, IDENTIFIER, THIS, SUPER:
+NOT, TILDE
+	primitive:
+LPAREN
+	check_start:
+NEW
+	common.new:
+%:
+end
+
+state	Stop
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+RPAREN
+	operand:
+end
+
+state	Operand
+/* CHARACTER_LITERAL: For the where a character constant is used
+   in place of its integer value. */
+INTEGER_LITERAL, LONG_LITERAL, FLOATING_POINT_LITERAL,
+	DOUBLE_LITERAL, CHARACTER_LITERAL, STRING_LITERAL, IDENTIFIER, TRUE,
+	FALSE, NULL, THIS, SUPER:
+PLUS, MINUS, NOT, TILDE
+	primitive:
+NEW
+	common.new:
+LPAREN
+	check_start:
+end
+
+state	Primitive
+/* CHARACTER_LITERAL: For the where a character constant is used
+   in place of its integer value. */
+INTEGER_LITERAL, LONG_LITERAL, FLOATING_POINT_LITERAL,
+	DOUBLE_LITERAL, CHARACTER_LITERAL, IDENTIFIER, TRUE, FALSE, NULL,
+	THIS, SUPER:
+PLUS, MINUS, NOT, TILDE
+	ext:
+NEW
+	common.new:
+LPAREN
+	check_start:
+end

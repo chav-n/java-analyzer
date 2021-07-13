@@ -1,0 +1,116 @@
+set	Head
+
+state	PackagePrologue
+PACKAGE
+	package
+	import_prologue:
+IMPORT
+	import
+	import_prologue:
+CLASS, INTERFACE
+	class.definition
+	type_prologue:
+ENUM
+	enum.prologue
+	type_prologue:
+PUBLIC, ABSTRACT, FINAL, STRICTFP
+	pre_type
+	type_prologue:
+AT
+	annotation.type
+	annotation.package_prologue:
+%:
+end
+
+state	ImportPrologue
+IMPORT
+	import
+	ext:
+CLASS, INTERFACE
+	class.definition
+	type_prologue:
+ENUM
+	enum.prologue
+	type_prologue:
+PUBLIC, ABSTRACT, FINAL, STRICTFP
+	pre_type
+	type_prologue:
+AT
+	annotation.type
+	annotation.type_prologue:
+%:
+end
+
+state	TypePrologue
+CLASS, INTERFACE
+	class.definition
+	ext:
+ENUM
+	enum.prologue
+	ext:
+PUBLIC, ABSTRACT, FINAL, STRICTFP
+	pre_type
+	ext:
+AT
+	annotation.type
+	annotation.type_prologue:
+SEMICOLON
+	ext:
+%:
+end
+
+state	Package
+IDENTIFIER
+	post_package:
+end
+
+state	PostPackage
+DOT
+	package:
+SEMICOLON:
+end
+
+state	Import
+IDENTIFIER
+	post_import:
+STATIC
+	static_import:
+end
+
+state	StaticImport
+IDENTIFIER
+	post_import:
+end
+
+state	PostImport
+SEMICOLON:
+DOT
+	import_branch:
+end
+
+state	ImportBranch
+IDENTIFIER
+	post_import:
+MULTIPLY
+	import_end:
+end
+
+state	ImportEnd
+SEMICOLON:
+end
+
+state	PreType
+CLASS, INTERFACE
+	class.definition:
+ENUM
+	enum.prologue:
+AT
+	pre_interface:
+PUBLIC, ABSTRACT, FINAL, STRICTFP
+	ext:
+end
+
+state	PreInterface
+INTERFACE
+	class.definition:
+end

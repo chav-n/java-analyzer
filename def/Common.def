@@ -1,0 +1,220 @@
+set	Common
+
+state	Value
+IDENTIFIER, THIS, SUPER
+	method_check:
+INTEGER_LITERAL, LONG_LITERAL, FLOATING_POINT_LITERAL,
+	DOUBLE_LITERAL, TRUE, FALSE, NULL, CHARACTER_LITERAL
+	operand:
+NEW
+	new
+	method_check:
+INT, LONG, FLOAT, DOUBLE, CHAR, SHORT, BYTE, BOOLEAN, VOID
+	primitive:
+STRING_LITERAL
+	method_check:
+LSQUAREBRACKET
+	ext
+	RSQUAREBRACKET
+	ext:
+LPAREN
+	cast.check_start
+	method_check:
+LCURLYBRACE
+	ext
+	value_end.braces
+	ext:
+PLUS_PLUS, MINUS_MINUS
+	inc_dec:
+NOT, TILDE, PLUS, MINUS, FINAL
+	ext:
+%:
+end
+
+state	Operand
+EQUAL, AND_EQUAL, OR_EQUAL, XOR_EQUAL, PLUS_EQUAL, MINUS_EQUAL,
+	MULTIPLY_EQUAL, DIVIDE_EQUAL, REMAINDER_EQUAL, LEFT_SHIFT_EQUAL,
+	RIGHT_SHIFT_EQUAL, UNSIGNED_RIGHT_SHIFT_EQUAL, PLUS, MINUS,
+	MULTIPLY, DIVIDE, REMAINDER, AND, OR, XOR, AND_AND, OR_OR,
+	EQUAL_EQUAL, LESS, LESS_EQUAL, GREATER, GREATER_EQUAL, NOT_EQUAL,
+	LEFT_SHIFT, RIGHT_SHIFT, UNSIGNED_RIGHT_SHIFT
+	value:
+QUESTIONMARK
+	value
+	value_end.tertiary_assignment
+	value:
+INSTANCEOF
+	instanceof:
+%:
+end
+
+state	MethodCheck
+INSTANCEOF
+	instanceof:
+DOT
+	dot.check_method:
+LSQUAREBRACKET
+	value
+	RSQUAREBRACKET
+	ext:
+LPAREN
+	value
+	value_end.arguments
+	post_method_check:
+EQUAL, AND_EQUAL, OR_EQUAL, XOR_EQUAL, PLUS_EQUAL, MINUS_EQUAL,
+	MULTIPLY_EQUAL, DIVIDE_EQUAL, REMAINDER_EQUAL, LEFT_SHIFT_EQUAL,
+	RIGHT_SHIFT_EQUAL, UNSIGNED_RIGHT_SHIFT_EQUAL
+	value:
+PLUS_PLUS, MINUS_MINUS
+	operand:
+%
+	operand:
+end
+
+state	PostMethodCheck
+INSTANCEOF
+	instanceof:
+DOT
+	dot.check_method:
+LSQUAREBRACKET
+	value
+	RSQUAREBRACKET
+	method_check:
+PLUS_PLUS, MINUS_MINUS
+	ext:
+%
+	operand:
+end
+
+state	IncDec
+THIS, IDENTIFIER
+	method_check:
+end
+
+state	New
+IDENTIFIER
+	post_new:
+INT, LONG, FLOAT, DOUBLE, CHAR, SHORT, BYTE, BOOLEAN
+	pre_square_brackets
+	new_array:
+end
+
+state	PostNew
+DOT
+	IDENTIFIER
+	ext:
+LESS
+	parameters
+	ext:
+LSQUAREBRACKET
+	value
+	RSQUAREBRACKET
+	new_array:
+LPAREN
+	value
+	value_end.arguments
+	new_object:
+end
+
+state	NewArray
+LSQUAREBRACKET
+	value
+	RSQUAREBRACKET
+	ext:
+LCURLYBRACE
+	value
+	value_end.braces
+	ext:
+%:
+end
+
+state	NewObject
+LCURLYBRACE
+	class.type
+	post_method_check:
+DOT
+	dot.check_method:
+%:
+end
+
+state	Instanceof
+/* In a primitive type is used in place of
+   its corresponding class type. */
+INT, LONG, FLOAT, DOUBLE, CHAR,
+	SHORT, BYTE, BOOLEAN, IDENTIFIER
+	post_instanceof:
+end
+
+state	PostInstanceof
+LESS
+	parameters
+	ext:
+DOT
+	IDENTIFIER
+	ext:
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+QUESTIONMARK
+	value
+	value_end.tertiary_assignment
+	value:
+AND, OR, XOR, AND_AND,
+	OR_OR, EQUAL_EQUAL, NOT_EQUAL
+	value:
+%:
+end
+
+state	Parameters
+LESS
+	ext
+	ext:
+GREATER:
+%%GREATER RIGHT_SHIFT:
+%%RIGHT_SHIFT UNSIGNED_RIGHT_SHIFT:
+COMMA, LSQUAREBRACKET, RSQUAREBRACKET, DOT, QUESTIONMARK,
+	AND, EXTENDS, IMPLEMENTS, SUPER, INT, LONG, FLOAT, DOUBLE,
+	CHAR, SHORT, BYTE, BOOLEAN, IDENTIFIER
+	ext:
+end
+
+state	Primitive
+DOT
+	post_primitive:
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+end
+
+state	PostPrimitive
+CLASS
+	class_operand:
+end
+
+state	ClassOperand
+INSTANCEOF, EQUAL, NOT_EQUAL,
+	AND, OR, XOR, AND_AND, OR_OR
+	value:
+DOT
+	dot.check_method:
+%:
+end
+
+state	PreBrackets
+LPAREN
+	value
+	RPAREN:
+end
+
+state	PreSquareBrackets
+LSQUAREBRACKET
+	value
+	RSQUAREBRACKET:
+end
+
+state	PrimitiveDeclaration
+IDENTIFIER:
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+end

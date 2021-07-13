@@ -1,0 +1,76 @@
+set	ValueEnd
+
+state	SingleValue
+SEMICOLON:
+end
+
+state	Arguments
+COMMA
+	common.value
+	ext:
+RPAREN:
+end
+
+state	MethodVariable
+COMMA
+	common.value
+	ext:
+SEMICOLON:
+end
+
+state	Braces
+COMMA
+	common.value
+	ext:
+RCURLYBRACE:
+end
+
+state	ForAssignment
+COMMA
+	method.for_type_next:
+SEMICOLON
+	common.value
+	single_value
+	common.value
+	arguments:
+/* For the ( String param : params . next ( ) )
+   case. */
+COLON
+	common.value
+	arguments:
+end
+
+state	ForVariable
+COMMA
+	method.for_next_variable:
+SEMICOLON
+	common.value
+	single_value
+	common.value
+	arguments:
+end
+
+state	ForAssignmentNext
+COMMA
+	method.for_type_next:
+SEMICOLON
+	common.value
+	single_value
+	common.value
+	arguments:
+end
+
+state	ForList
+RPAREN:
+end
+
+state	TertiaryAssignment
+COLON:
+end
+
+state	AssertClause
+SEMICOLON:
+COLON
+	common.value
+	single_value:
+end

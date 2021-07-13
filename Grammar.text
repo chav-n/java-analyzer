@@ -1,0 +1,34 @@
+CompilationUnit:
+	PackagePrologue? ImportPrologue? TypePrologue*
+PackagePrologue:
+	Annotation* PackageDefinition
+ImportPrologue:
+	ImportClause*
+TypePrologue:
+	Annotation* ClassDefinition
+	Annotation* EnumPrologue
+	Annotation* PreType
+PreType:
+	Qualifier* ClassDefinition
+	Qualifier* EnumPrologue
+	Qualifier* PreInterface
+PreInterface
+	@ InterfaceDefinition
+PackageDefinition:
+	package name[.name]*;
+ImportClause
+	import	[static]? name[.name]*[.*]?;
+Qualifier:
+	public|abstract|final|strictfp
+Annotation:
+	@ name AnnotationExpression?
+AnnotationExpression:
+	( ElementType=ElementValue [, ElementType=ElementValue]* )
+	( ElementValue )
+ElementValue:
+	ConditionalExpression
+	Annotation
+	ElementValueArray
+	Value
+ElementValueArray:
+	{ ElementType=ElementValue [, ElementType=ElementValue]* }

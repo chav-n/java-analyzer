@@ -1,0 +1,41 @@
+set	Enum
+
+state	Prologue
+IDENTIFIER
+	check_implements:
+end
+
+state	CheckImplements
+IMPLEMENTS
+	type_list.type
+	type_list.enum_implements:
+LCURLYBRACE
+	first_value:
+end
+
+state	FirstValue
+IDENTIFIER
+	value:
+RCURLYBRACE:
+end
+
+state	NextValue
+IDENTIFIER
+	value:
+RCURLYBRACE:
+end
+
+state	Value
+LPAREN
+	common.value
+	value_end.arguments
+	ext:
+LCURLYBRACE
+	class.type
+	ext:
+RCURLYBRACE:
+SEMICOLON
+	class.type:
+COMMA
+	next_value:
+end

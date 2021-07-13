@@ -1,0 +1,56 @@
+set	Try
+
+state	Prologue
+LCURLYBRACE
+	method.type
+	post_try:
+LPAREN
+	common.value
+	RPAREN
+	LCURLYBRACE
+	method.type
+	post_try:
+end
+
+state	Catch
+LPAREN
+	catch_type:
+end
+
+state	CatchType
+IDENTIFIER
+	catch_variable:
+FINAL
+	ext:
+end
+
+state	CatchVariable
+IDENTIFIER
+	RPAREN:
+DOT
+	IDENTIFIER
+	ext:
+end
+
+state	PostTry
+CATCH
+	catch
+	LCURLYBRACE
+	method.type
+	post_catch:
+FINALLY
+	LCURLYBRACE
+	method.type:
+end
+
+state	PostCatch
+CATCH
+	catch
+	LCURLYBRACE
+	method.type
+	ext:
+FINALLY
+	LCURLYBRACE
+	method.type:
+%:
+end

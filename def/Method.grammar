@@ -1,0 +1,621 @@
+package	Method
+
+Prologue(
+THROWS
+%ext_type_list.ext_type
+%ext_type_list.ext_method_throws,
+
+DEFAULT
+%ext_common.ext_value
+%ext_value_end.ext_single_value,
+
+LCURLYBRACE
+%ext_type,
+
+SEMICOLON,
+
+LSQUAREBRACKET
+%ext_common.ext_square_brackets_void
+%ext
+)
+
+Type(
+(WHILE, IF)
+%ext_common.ext_pre_brackets
+%ext_block_value,
+
+FOR
+%ext_pre_for
+%ext_block_value,
+
+TRY
+%ext_try.ext_prologue
+%ext_try.ext_post_try,
+
+AT
+%ext_annotation.ext_type
+%ext_annotation.ext_method_type,
+
+(
+(CLASS, INTERFACE)
+%ext_class.ext_definition,
+
+(INT, LONG, FLOAT, DOUBLE, CHAR, SHORT, BYTE, BOOLEAN)
+%ext_pre_variable,
+
+(IDENTIFIER, SUPER, THIS)
+%ext_post_type,
+
+STRING_LITERAL
+%ext_post_type,
+
+LCURLYBRACE
+%ext_type,
+
+(
+/* For ((SubClass) superClass).method ( ) case. */
+LPAREN
+%ext_common.ext_value
+%ext_value_end.ext_brackets
+%ext_common.ext_post_method_check,
+
+/* For [++i;] and [--i;] cases. */
+(PLUS_PLUS, MINUS_MINUS)
+%ext_common.ext_inc_dec,
+
+NEW
+%ext_common.ext_new
+%ext_common.ext_method_check,
+
+(RETURN, THROW)
+%ext_common.ext_value
+)
+%ext_value_end.ext_single_value
+
+DO
+%ext_do_value
+
+SWITCH
+%ext_common.ext_pre_brackets
+%ext_pre_switch,
+
+SYNCHRONIZED
+%ext_common.ext_pre_brackets
+%ext_pre_block,
+
+ASSERT
+%ext_common.ext_value
+%ext_value_end.ext_assert_clause,
+
+(BREAK, CONTINUE)
+%ext_label,
+
+(ELSE, FINAL, ABSTRACT,
+/* For blocks that end with a ';' and empty
+   statements. */
+SEMICOLON)
+)
+%ext,
+
+RCURLYBRACE
+)
+
+state	Extension.Switch
+case WHILE:
+case IF:
+	%ext_switch_value
+	%ext_common.ext_pre_brackets
+case DO:
+	%ext_switch
+	%ext_do_value
+case FOR:
+	%ext_switch_value
+	%ext_pre_for
+case SWITCH:
+	%ext
+	%ext_pre_switch
+	%ext_common.ext_pre_brackets
+case CASE:
+	%ext
+	%ext_case
+case DEFAULT:
+	%ext_case_default
+case SYNCHRONIZED:
+	%ext
+	%ext_pre_block
+	%ext_common.ext_pre_brackets
+case NEW:
+	%ext
+	%ext_value_end.ext_single_value
+	%ext_common.ext_method_check
+	%ext_common.ext_new
+case ASSERT:
+	%ext
+	%ext_value_end.ext_assert_clause
+	%ext_common.ext_value
+case RETURN:
+case THROW:
+	%ext
+	%ext_value_end.ext_single_value
+	%ext_common.ext_value
+case BREAK:
+case CONTINUE:
+	%ext
+	%ext_label
+case TRY:
+	%ext_try.ext_post_switch_try
+	%ext_try.ext_prologue
+case CLASS:
+case INTERFACE:
+	%ext
+	%ext_class.ext_definition
+case INT:
+case LONG:
+case FLOAT:
+case DOUBLE:
+case CHAR:
+case SHORT:
+case BYTE:
+case BOOLEAN:
+	%ext
+	%ext_pre_variable
+case IDENTIFIER:
+case SUPER:
+case THIS:
+	%ext
+	%ext_post_type
+case STRING_LITERAL:
+	%ext
+	%ext_post_type
+case LCURLYBRACE:
+	%ext
+	%ext_type
+case RCURLYBRACE:
+	%%
+/* For ((SubClass) superClass).method ( ) case. */
+case LPAREN:
+	%ext
+	%ext_value_end.ext_single_value
+	%ext_common.ext_post_method_check
+	%ext_value_end.ext_brackets
+	%ext_common.ext_value
+/* For [++i;] and [--i;] cases. */
+case PLUS_PLUS:
+case MINUS_MINUS:
+	%ext
+	%ext_value_end.ext_single_value
+	%ext_common.ext_inc_dec
+case AT:
+	%ext_annotation.ext_method_type
+	%ext_annotation.ext_type
+case ELSE:
+case FINAL:
+case ABSTRACT:
+/* For blocks that end with a ';' and empty
+   statements. */
+case SEMICOLON:
+	%ext
+end
+
+state	Extension.PostType
+case IDENTIFIER:
+	%ext_value_end.ext_method_assignment
+	%ext_variable
+case DOT:
+	%ext_dot.check_type
+case LSQUAREBRACKET:
+	%ext
+	%ext_value_end.ext_square_brackets
+	%ext_common.ext_value
+case LPAREN:
+	%ext
+	%ext_value_end.ext_arguments
+	%ext_common.ext_value
+case LESS:
+	%ext
+	%ext_common.ext_parameters
+/* For the label case. */
+case COLON:
+	%%
+case EQUAL:
+case AND_EQUAL:
+case OR_EQUAL:
+case XOR_EQUAL:
+case PLUS_EQUAL:
+case MINUS_EQUAL:
+case MULTIPLY_EQUAL:
+case DIVIDE_EQUAL:
+case REMAINDER_EQUAL:
+case LEFT_SHIFT_EQUAL:
+case RIGHT_SHIFT_EQUAL:
+case UNSIGNED_RIGHT_SHIFT_EQUAL:
+	%ext_value_end.ext_single_value
+	%ext_common.ext_value
+case PLUS_PLUS:
+case MINUS_MINUS:
+case SEMICOLON:
+	%%
+end
+
+state	Extension.PreVariable
+case IDENTIFIER:
+	%ext_value_end.ext_method_assignment
+	%ext_variable
+case LSQUAREBRACKET:
+	%ext
+	%ext_common.ext_square_brackets_void
+end
+
+state	Extension.Variable
+case LSQUAREBRACKET:
+	%ext
+	%ext_common.ext_square_brackets_void
+case EQUAL:
+	%ext_common.ext_value
+case IDENTIFIER:
+	%ext
+default:
+	%%
+end
+
+state	Extension.Label
+case IDENTIFIER:
+	%ext_post_label
+case SEMICOLON:
+	%%
+end
+
+state	Extension.PostLabel
+case SEMICOLON:
+	%%
+end
+
+state	Extension.ForType
+case INT:
+case LONG:
+case FLOAT:
+case DOUBLE:
+case CHAR:
+case SHORT:
+case BYTE:
+case BOOLEAN:
+case IDENTIFIER:
+case SUPER:
+case THIS:
+	%ext_for_post_type
+case AT:
+	%ext_annotation.ext_for_type
+	%ext_annotation.ext_type
+case FINAL:
+case PLUS_PLUS:
+case MINUS_MINUS:
+	%ext
+default:
+	%%
+end
+
+state	Extension.ForPostType
+case IDENTIFIER:
+	%ext_for_variable
+case DOT:
+	%ext_dot.check_for_type
+case LSQUAREBRACKET:
+	%ext
+	%ext_value_end.ext_square_brackets
+	%ext_common.ext_value
+case LESS:
+	%ext
+	%ext_common.ext_parameters
+case EQUAL:
+case AND_EQUAL:
+case OR_EQUAL:
+case XOR_EQUAL:
+case PLUS_EQUAL:
+case MINUS_EQUAL:
+case MULTIPLY_EQUAL:
+case DIVIDE_EQUAL:
+case REMAINDER_EQUAL:
+case LEFT_SHIFT_EQUAL:
+case RIGHT_SHIFT_EQUAL:
+case UNSIGNED_RIGHT_SHIFT_EQUAL:
+	%ext_common.ext_value
+case LPAREN:
+	%ext
+	%ext_value_end.ext_arguments
+	%ext_common.ext_value
+case COMMA:
+	%ext_for_type
+case PLUS_PLUS:
+case MINUS_MINUS:
+	%ext
+default:
+	%%
+end
+
+state	Extension.ForPreVariable
+case IDENTIFIER:
+	%ext_for_variable
+end
+
+state	Extension.ForVariable
+case EQUAL:
+	%ext_common.ext_value
+case LSQUAREBRACKET:
+	%ext
+	%ext_common.ext_square_brackets_void
+/* No action. Tokens are captured indirectly with
+   delimiters. */
+case IDENTIFIER:
+case COMMA:
+	%ext
+default:
+	%%
+end
+
+state	Extension.DoValue
+case IDENTIFIER:
+case THIS:
+case SUPER:
+	%ext_post_do
+	%ext_value_end.ext_single_value
+	%ext_common.ext_method_check
+case WHILE:
+case IF:
+	%ext
+	%ext_common.ext_pre_brackets
+case DO:
+	%ext_post_do
+case FOR:
+	%ext
+	%ext_pre_for
+case SWITCH:
+	%ext_post_do
+	%ext_pre_switch
+	%ext_common.ext_pre_brackets
+case SYNCHRONIZED:
+	%ext_post_do
+	%ext_pre_block
+	%ext_common.ext_pre_brackets
+case NEW:
+	%ext_post_do
+	%ext_value_end.ext_single_value
+	%ext_common.ext_method_check
+	%ext_common.ext_new
+case RETURN:
+case THROW:
+	%ext_post_do
+	%ext_value_end.ext_single_value
+	%ext_common.ext_value
+case TRY:
+	%ext_try.ext_post_do_try
+	%ext_try.ext_prologue
+case ASSERT:
+	%ext_post_do
+	%ext_value_end.ext_assert_clause
+	%ext_common.ext_value
+case LCURLYBRACE:
+	%ext_post_do
+	%ext_type
+/* For  empty statement. */
+case SEMICOLON:
+	%ext_post_do
+/* For ((SubClass) superClass).method ( ) case. */
+case LPAREN:
+	%ext_post_do
+	%ext_value_end.ext_single_value
+	%ext_common.ext_post_method_check
+	%ext_value_end.ext_brackets
+	%ext_common.ext_value
+case PLUS_PLUS:
+case MINUS_MINUS:
+	%ext_post_do
+	%ext_value_end.ext_single_value
+	%ext_common.ext_inc_dec
+end
+
+state	Extension.BlockValue
+case IDENTIFIER:
+case THIS:
+case SUPER:
+	%ext_type
+	%ext_value_end.ext_single_value
+	%ext_common.ext_method_check
+case WHILE:
+case IF:
+	%ext
+	%ext_common.ext_pre_brackets
+case DO:
+	%ext_do_value
+case FOR:
+	%ext
+	%ext_pre_for
+case SWITCH:
+	%ext_type
+	%ext_pre_switch
+	%ext_common.ext_pre_brackets
+case SYNCHRONIZED:
+	%ext_type
+	%ext_pre_block
+	%ext_common.ext_pre_brackets
+case NEW:
+	%ext_type
+	%ext_value_end.ext_single_value
+	%ext_common.ext_method_check
+	%ext_common.ext_new
+case RETURN:
+case THROW:
+	%ext_type
+	%ext_value_end.ext_single_value
+	%ext_common.ext_value
+case BREAK:
+case CONTINUE:
+	%ext_type
+	%ext_label
+case TRY:
+	%ext_try.ext_post_try
+	%ext_try.ext_prologue
+case ASSERT:
+	%ext_type
+	%ext_value_end.ext_assert_clause
+	%ext_common.ext_value
+case LCURLYBRACE:
+	%ext_type
+	%ext_type
+/* For  empty statement. */
+case SEMICOLON:
+	%ext_type
+/* For ((SubClass) superClass).method ( ) case. */
+case LPAREN:
+	%ext_type
+	%ext_value_end.ext_single_value
+	%ext_common.ext_post_method_check
+	%ext_value_end.ext_brackets
+	%ext_common.ext_value
+case PLUS_PLUS:
+case MINUS_MINUS:
+	%ext_type
+	%ext_value_end.ext_single_value
+	%ext_common.ext_inc_dec
+end
+
+state	Extension.SwitchValue
+case IDENTIFIER:
+case THIS:
+case SUPER:
+	%ext_switch
+	%ext_value_end.ext_single_value
+	%ext_common.ext_method_check
+case WHILE:
+case IF:
+	%ext
+	%ext_common.ext_pre_brackets
+case DO:
+	%ext_do_value
+case FOR:
+	%ext
+	%ext_pre_for
+case SWITCH:
+	%ext_switch
+	%ext_pre_switch
+	%ext_common.ext_pre_brackets
+case SYNCHRONIZED:
+	%ext_switch
+	%ext_pre_block
+	%ext_common.ext_pre_brackets
+case NEW:
+	%ext_switch
+	%ext_value_end.ext_single_value
+	%ext_common.ext_method_check
+	%ext_common.ext_new
+case RETURN:
+case THROW:
+	%ext_switch
+	%ext_value_end.ext_single_value
+	%ext_common.ext_value
+case BREAK:
+case CONTINUE:
+	%ext_switch
+	%ext_label
+case TRY:
+	%ext_try.ext_post_switch_try
+	%ext_try.ext_prologue
+case ASSERT:
+	%ext_switch
+	%ext_value_end.ext_assert_clause
+	%ext_common.ext_value
+case LCURLYBRACE:
+	%ext_switch
+	%ext_type
+/* For  empty statement. */
+case SEMICOLON:
+	%ext_switch
+/* For ((SubClass) superClass).method ( ) case. */
+case LPAREN:
+	%ext_switch
+	%ext_value_end.ext_single_value
+	%ext_common.ext_post_method_check
+	%ext_value_end.ext_brackets
+	%ext_common.ext_value
+case PLUS_PLUS:
+case MINUS_MINUS:
+	%ext_switch
+	%ext_value_end.ext_single_value
+	%ext_common.ext_inc_dec
+end
+
+state	Extension.Case
+case COLON:
+	%%
+case DOT:
+	%ext
+	%ext_dot.ext_type
+case LPAREN:
+	%ext
+	%ext_cast.check_start
+/* Constant integer expressions. */
+case PLUS:
+case MINUS:
+case MULTIPLY:
+case DIVIDE:
+case REMAINDER:
+case OR:
+case AND:
+case XOR:
+case LEFT_SHIFT:
+case RIGHT_SHIFT:
+case UNSIGNED_RIGHT_SHIFT:
+	%ext_case_operand
+case IDENTIFIER:
+case INTEGER_LITERAL:
+case LONG_LITERAL:
+case FLOATING_POINT_LITERAL:
+case DOUBLE_LITERAL:
+case THIS:
+case CHARACTER_LITERAL:
+	%ext
+end
+state	Extension.CaseOperand
+case IDENTIFIER:
+case INTEGER_LITERAL:
+case LONG_LITERAL:
+case FLOATING_POINT_LITERAL:
+case DOUBLE_LITERAL:
+case THIS:
+case CHARACTER_LITERAL:
+	%ext_case
+case LPAREN:
+	%ext_case
+	%ext_cast.check_start
+end
+
+state	Extension.CaseDefault
+case COLON:
+	%ext_switch
+end
+
+state	Extension.PreFor
+case LPAREN:
+	%ext_value_end.ext_for_assignment
+	%ext_for_type
+end
+
+state	Extension.PreBlock
+case LCURLYBRACE:
+	%ext_type
+end
+
+state	Extension.PreSwitch
+case LCURLYBRACE:
+	%ext_switch
+end
+
+state	Extension.PostDo
+case WHILE:
+	%ext_semicolon
+	%ext_common.ext_pre_brackets
+end
+
+state	Extension.Semicolon
+case SEMICOLON:
+	%%
+end

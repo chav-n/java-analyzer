@@ -1,0 +1,43 @@
+set	TypeList
+
+state	Type
+IDENTIFIER
+	post_type:
+end
+
+state	PostType
+DOT
+	IDENTIFIER
+	ext:
+LESS
+	common.parameters
+	ext:
+COMMA
+	type:
+%:
+end
+
+state	ClassExtends
+IMPLEMENTS
+	type
+	class_implements:
+LCURLYBRACE
+	class.type:
+end
+
+state	ClassImplements
+LCURLYBRACE
+	class.type:
+end
+
+state	EnumImplements
+LCURLYBRACE
+	enum.first_value:
+end
+
+state	MethodThrows
+LCURLYBRACE
+	method.type:
+SEMICOLON:
+end
+

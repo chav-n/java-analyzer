@@ -1,0 +1,28 @@
+ExtensionCommon=
+  ExtensionMethodCheck=
+    token_branch ( )
+    delimiter_branch ( )
+  ExtensionPostMethodCheck=
+    token_branch ( )
+    delimiter_branch ( )
+  ExtensionNewArray=
+    delimiter_branch ( )
+  ExtensionNewObject=
+    delimiter_branch ( )
+  ExtensionAnonymousClass=
+    delimiter_branch ( )
+  ExtensionPostInstanceOf=
+    delimiter_branch ( )
+  ExtensionPostTypeList=
+    token_branch ( )
+    delimiter_branch ( )
+  ExtensionPostAnnotation=
+    token_branch ( )
+    delimiter_branch ( )
+  RuleAttribute=
+    token_branch ( )
+    delimiter_branch ( )
+ExtensionMethod=
+  ExtensionPostTry=
+    token_branch ( )
+    delimiter_branch ( )

@@ -1,0 +1,33 @@
+What am I gonna do? This?
+
+Cast
+:Cast:( Type )
+:Type:SimpleType
+:Type:GenericType
+:SimpleType:Identifier
+:GenericType:Identifier Parameters
+:Parameters:< Identifier >
+:Parameters:< Identifier Identifiers >
+:Identifiers:, Identifier
+:Identifiers:Identifiers , Identifier
+or That?
+(++
+(--
+(+
+(-
+(~
+(!
+(Identifier
+(Identifier:+
+(Identifier:++
+(Identifier:)
+(Identifier:<
+(Identifier<:+
+(Identifier<:-
+(Identifier<:~
+(Identifier<:++
+(Identifier<:Identifier
+(Identifier<Identifier:>
+(Identifier<Identifier:,
+(Identifier<Identifier:+
+(Identifier<Identifier:++

@@ -1,0 +1,30 @@
+IDENTIFIER:
+	[(a - z), (A - Z), $, _],
+	[(a - z), (A - Z), $, _, (0 - 9)]*
+UNIQUE:
+	assert
+	try
+	catch
+	if
+	for
+	while
+	...
+	...
+	...
+	int
+	long
+	double
+	float
+	byte
+	short
+	char
+	boolean
+HEXADECIMAL:
+	0x, [(0 - 9), (a - f), (A - F)]+
+OCTAL:
+	0, (0 - 7)+
+DECIMAL:
+	(1 - 9), (0 - 9)*
+	:0. , (0 - 9)*
+	:(1 - 9), (0 - 9)*, . , (0 - 9)*
+	:., (0 - 9)+

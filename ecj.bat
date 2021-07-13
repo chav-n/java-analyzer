@@ -1,0 +1,9 @@
+java -jar \bin\ecj.jar -6 -repeat 10 -time:detail C:\devel\AttributeReportJava\samples\CacheBase.java
+java -jar \bin\ecj.jar -6 -repeat 10 -time:detail C:\devel\AttributeReportJava\samples\ClassFile.java
+java -jar \bin\ecj.jar -6 -repeat 10 -time:detail C:\devel\AttributeReportJava\samples\Cortado.java
+java -jar \bin\ecj.jar -6 -repeat 10 -time:detail C:\devel\AttributeReportJava\samples\CortadoPipeline.java
+java -jar \bin\ecj.jar -6 -repeat 10 -time:detail C:\devel\AttributeReportJava\samples\DBServiceImpl.java
+java -jar \bin\ecj.jar -6 -repeat 10 -time:detail C:\devel\AttributeReportJava\samples\Parser.java
+java -jar \bin\ecj.jar -6 -repeat 10 -time:detail C:\devel\AttributeReportJava\samples\Scene.java
+java -jar \bin\ecj.jar -6 -repeat 10 -time:detail C:\devel\AttributeReportJava\samples\UCharacter.java
+java -jar \bin\ecj.jar -6 -repeat 10 -time:detail C:\devel\AttributeReportJava\samples\VorbisFile.java

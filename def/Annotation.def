@@ -1,0 +1,160 @@
+set	Annotation
+
+state	Type
+IDENTIFIER
+	post_type:
+end
+
+state	PostType
+DOT
+	IDENTIFIER
+	ext:
+LPAREN
+	argument
+	RPAREN:
+AT
+	type:
+%:
+end
+
+state	Argument
+IDENTIFIER
+	post_identifier:
+AT
+	type
+	post_argument:
+STRING_LITERAL, CHARACTER_LITERAL, INTEGER_LITERAL, LONG_LITERAL,
+	FLOATING_POINT_LITERAL, DOUBLE_LITERAL, TRUE, FALSE, NULL
+	post_argument:
+LCURLYBRACE
+	argument
+	RCURLYBRACE
+	post_argument:
+%:
+end
+
+state	PostIdentifier
+DOT
+	dot_identifier
+	post_argument:
+%
+	post_argument:
+end
+
+state	PostArgument
+COMMA
+	argument:
+EQUAL
+	argument:
+%:
+end
+
+state	DotIdentifier
+IDENTIFIER, CLASS:
+end
+
+state	PackagePrologue
+AT
+	type
+	ext:
+PACKAGE
+	head.package:
+CLASS, INTERFACE
+	class.definition
+	head.type_prologue:
+ENUM
+	enum.prologue
+	head.type_prologue:
+PUBLIC, ABSTRACT, FINAL, STRICTFP
+	head.pre_type
+	head.type_prologue:
+end
+
+state	TypePrologue
+AT
+	type
+	ext:
+CLASS, INTERFACE
+	class.definition
+	head.type_prologue:
+ENUM
+	enum.prologue
+	head.type_prologue:
+PUBLIC, ABSTRACT, FINAL, STRICTFP
+	head.pre_type
+	head.type_prologue:
+end
+
+state	ClassType
+AT
+	type
+	ext:
+CLASS, INTERFACE
+	class.definition:
+ENUM
+	enum.prologue:
+VOID, INT, LONG, FLOAT, DOUBLE,
+	CHAR, SHORT, BYTE, BOOLEAN
+	class.attribute_primitive:
+IDENTIFIER
+	class.attribute_object:
+STATIC
+	class.type_static:
+PUBLIC, PRIVATE, PROTECTED, FINAL, ABSTRACT,
+	NATIVE, TRANSIENT, VOLATILE, SYNCHRONIZED, STRICTFP
+	class.type_classifier:
+LESS
+	common.parameters
+	class.pre_type:
+end
+
+state	ArgumentType
+AT
+	type
+	ext:
+FINAL
+	class.argument_type:
+INT, LONG, FLOAT, DOUBLE, CHAR,
+	SHORT, BYTE, BOOLEAN, IDENTIFIER
+	class.argument_post_type:
+end
+
+state	MethodType
+AT
+	type
+	ext:
+CLASS, INTERFACE
+	class.definition
+	method.statement:
+ABSTRACT, FINAL
+	method.statement:
+INT, LONG, FLOAT, DOUBLE, CHAR,
+	SHORT, BYTE, BOOLEAN, IDENTIFIER
+	method.post_type:
+end
+
+state	MethodSwitch
+AT
+	type
+	ext:
+FINAL
+	method.switch:
+INT, LONG, FLOAT, DOUBLE, CHAR,
+	SHORT, BYTE, BOOLEAN, IDENTIFIER
+	method.post_type
+	method.switch:
+end
+
+state	ForType
+AT
+	type
+	ext:
+FINAL
+	method.for_type:
+INT, LONG, FLOAT, DOUBLE,
+	CHAR, SHORT, BYTE, BOOLEAN
+	common.primitive_declaration
+	method.for_variable:
+IDENTIFIER
+	method.for_post_type:
+end

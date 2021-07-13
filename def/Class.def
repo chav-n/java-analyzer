@@ -1,0 +1,231 @@
+set	Class
+
+state	Definition
+IDENTIFIER
+	post_definition:
+end
+
+state	PostDefinition
+EXTENDS
+	type_list.type
+	type_list.class_extends:
+IMPLEMENTS
+	type_list.type
+	type_list.class_implements:
+LESS
+	common.parameters
+	ext:
+LCURLYBRACE
+	type:
+end
+
+state	PostInheritance
+IMPLEMENTS
+	type_list.type
+	type_list.class_implements:
+LCURLYBRACE
+	type:
+end
+
+state	PostImplements
+LCURLYBRACE
+	type:
+end
+
+state	PreType
+VOID, INT, LONG, FLOAT, DOUBLE,
+	CHAR, SHORT, BYTE, BOOLEAN
+	attribute_primitive:
+IDENTIFIER
+	attribute_object:
+end
+
+state	Type
+CLASS, INTERFACE
+	definition
+	ext:
+ENUM
+	enum.prologue
+	ext:
+STATIC
+	type_static
+	ext:
+VOID, INT, LONG, FLOAT, DOUBLE,
+	CHAR, SHORT, BYTE, BOOLEAN
+	attribute_primitive
+	ext:
+IDENTIFIER
+	attribute_object
+	ext:
+/* For static blocks without the "static"
+   keyword. */
+LCURLYBRACE
+	method.type
+	ext:
+AT
+	annotation.type
+	annotation.class_type
+	ext:
+LESS
+	common.parameters
+	pre_type
+	ext:
+RCURLYBRACE:
+/* SEMICOLON: For enums, inner classes, and methods that end
+   with a semicolon. */
+SEMICOLON
+	ext:
+PUBLIC, PRIVATE, PROTECTED, FINAL, ABSTRACT, NATIVE,
+	TRANSIENT, VOLATILE, SYNCHRONIZED, STRICTFP
+	type_classifier
+	ext:
+end
+
+state	TypeClassifier
+CLASS, INTERFACE
+	definition:
+ENUM
+	enum.prologue:
+VOID, INT, LONG, FLOAT, DOUBLE,
+	CHAR, SHORT, BYTE, BOOLEAN
+	attribute_primitive:
+IDENTIFIER
+	attribute_object:
+LESS
+	common.parameters
+	pre_type:
+STATIC, PUBLIC, PRIVATE, PROTECTED, FINAL, ABSTRACT,
+	NATIVE, TRANSIENT, VOLATILE, SYNCHRONIZED, STRICTFP
+	ext:
+end
+
+state	TypeStatic
+CLASS, INTERFACE
+	definition:
+ENUM
+	enum.prologue:
+VOID, INT, LONG, FLOAT, DOUBLE,
+	CHAR, SHORT, BYTE, BOOLEAN
+	attribute_primitive:
+IDENTIFIER
+	attribute_object:
+LCURLYBRACE
+	method.type:
+/* Case: [... static <T extends ...] */
+LESS
+	common.parameters
+	pre_type:
+PUBLIC, PRIVATE, PROTECTED, FINAL, ABSTRACT,
+	NATIVE, TRANSIENT, VOLATILE, SYNCHRONIZED, STRICTFP
+	type_classifier:
+end
+
+state	AttributeObject
+IDENTIFIER
+	identifier:
+DOT
+	IDENTIFIER
+	ext:
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+LESS
+	common.parameters
+	ext:
+LPAREN
+	argument_type
+	method.prologue:
+end
+
+state	AttributePrimitive
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+IDENTIFIER
+	identifier:
+end
+
+state	Identifier
+EQUAL
+	common.value
+	post_assignment:
+COMMA
+	IDENTIFIER
+	post_variable:
+SEMICOLON:
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+LPAREN
+	argument_type
+	method.prologue:
+end
+
+state	PostVariable
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+EQUAL
+	common.value
+	post_assignment:
+COMMA
+	IDENTIFIER
+	ext:
+SEMICOLON:
+end
+
+state	PostAssignment
+COMMA
+	IDENTIFIER
+	post_variable:
+SEMICOLON:
+end
+
+state	ArgumentType
+INT, LONG, FLOAT, DOUBLE, CHAR,
+	SHORT, BYTE, BOOLEAN, IDENTIFIER
+	argument_post_type:
+/* For no argument methods. */
+RPAREN:
+AT
+	annotation.type
+	annotation.argument_type:
+FINAL
+	argument_type_final:
+end
+
+state	ArgumentTypeFinal
+INT, LONG, FLOAT, DOUBLE, CHAR,
+	SHORT, BYTE, BOOLEAN, IDENTIFIER
+	argument_post_type:
+end
+
+state	ArgumentPostType
+IDENTIFIER
+	argument_variable:
+DOT
+	IDENTIFIER
+	ext:
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+LESS
+	common.parameters
+	ext:
+ELLIPSIS
+	argument_pre_variable:
+end
+
+state	ArgumentPreVariable
+IDENTIFIER
+	argument_variable:
+end
+
+state	ArgumentVariable
+COMMA
+	argument_type:
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+RPAREN:
+end

@@ -1,0 +1,334 @@
+set	Method
+
+state	Prologue
+THROWS
+	type_list.type
+	type_list.method_throws:
+DEFAULT
+	common.value
+	value_end.single_value:
+LCURLYBRACE
+	type:
+SEMICOLON:
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+end
+
+state	Statement
+IF
+	common.pre_brackets
+	ext
+	post_if:
+WHILE
+	common.pre_brackets
+	ext:
+FOR
+	LPAREN
+	for_type
+	ext:
+DO
+	ext
+	WHILE
+	common.pre_brackets
+	SEMICOLON:
+SWITCH
+	common.pre_brackets
+	LCURLYBRACE
+	switch:
+TRY
+	try.prologue:
+SYNCHRONIZED
+	common.pre_brackets
+	LCURLYBRACE
+	type:
+NEW
+	common.new
+	common.method_check
+	value_end.single_value:
+ASSERT
+	common.value
+	value_end.assert_clause:
+RETURN, THROW
+	common.value
+	value_end.single_value:
+BREAK, CONTINUE
+	label:
+CLASS, INTERFACE
+	class.definition:
+INT, LONG, FLOAT, DOUBLE, CHAR, SHORT, BYTE, BOOLEAN
+	common.primitive_declaration
+	variable:
+IDENTIFIER, SUPER, THIS, STRING_LITERAL
+	post_type:
+LCURLYBRACE
+	type:
+/* For ((SubClass) superClass).method ( ) case. */
+LPAREN
+	common.value
+	RPAREN
+	common.post_method_check
+	value_end.single_value:
+/* For [++i;] and [--i;] cases. */
+PLUS_PLUS, MINUS_MINUS
+	common.inc_dec
+	value_end.single_value:
+/* SEMICOLON: For blocks that end with a ';' and empty
+   statements. */
+FINAL, ABSTRACT, SEMICOLON:
+AT
+	annotation.type
+	annotation.method_type:
+%:
+end
+
+state	Type
+RCURLYBRACE:
+%
+	statement
+	ext:
+end
+
+state	PostType
+IDENTIFIER
+	variable:
+DOT
+	dot.check_type:
+LSQUAREBRACKET
+	common.value
+	RSQUAREBRACKET
+	ext:
+LPAREN
+	common.value
+	value_end.arguments
+	common.post_method_check
+	SEMICOLON:
+LESS
+	common.parameters
+	ext:
+/* For the label case. */
+COLON:
+EQUAL, AND_EQUAL, OR_EQUAL, XOR_EQUAL, PLUS_EQUAL, MINUS_EQUAL,
+	MULTIPLY_EQUAL, DIVIDE_EQUAL, REMAINDER_EQUAL, LEFT_SHIFT_EQUAL,
+	RIGHT_SHIFT_EQUAL, UNSIGNED_RIGHT_SHIFT_EQUAL
+	common.value
+	value_end.single_value:
+PLUS_PLUS, MINUS_MINUS
+	SEMICOLON:
+SEMICOLON:
+end
+
+state	Variable
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+EQUAL
+	common.value
+	value_end.method_variable:
+COMMA
+	IDENTIFIER
+	ext:
+IDENTIFIER
+	ext:
+SEMICOLON:
+end
+
+state	Label
+IDENTIFIER
+	post_label:
+SEMICOLON:
+end
+
+state	PostLabel
+SEMICOLON:
+end
+
+state	ForType
+INT, LONG, FLOAT, DOUBLE, CHAR, SHORT, BYTE, BOOLEAN
+	common.primitive_declaration
+	for_variable:
+IDENTIFIER, SUPER, THIS
+	for_post_type:
+AT
+	annotation.type
+	annotation.for_type:
+FINAL
+	ext:
+PLUS_PLUS, MINUS_MINUS
+	for_inc_dec
+	value_end.for_assignment_next:
+SEMICOLON
+	common.value
+	value_end.single_value
+	common.value
+	value_end.arguments:
+end
+
+state	ForPostType
+IDENTIFIER
+	for_variable:
+DOT
+	dot.check_for_type:
+LSQUAREBRACKET
+	common.value
+	RSQUAREBRACKET
+	ext:
+LESS
+	common.parameters
+	ext:
+EQUAL, AND_EQUAL, OR_EQUAL, XOR_EQUAL, PLUS_EQUAL, MINUS_EQUAL,
+	MULTIPLY_EQUAL, DIVIDE_EQUAL, REMAINDER_EQUAL, LEFT_SHIFT_EQUAL,
+	RIGHT_SHIFT_EQUAL, UNSIGNED_RIGHT_SHIFT_EQUAL
+	common.value
+	value_end.for_assignment:
+LPAREN
+	common.value
+	value_end.arguments
+	value_end.for_assignment:
+COMMA
+	for_type_next:
+PLUS_PLUS, MINUS_MINUS
+	value_end.for_assignment_next:
+end
+
+state	ForVariable
+EQUAL
+	common.value
+	value_end.for_variable:
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+COMMA
+	for_next_variable:
+SEMICOLON
+	common.value
+	value_end.single_value
+	common.value
+	value_end.arguments:
+COLON
+	common.value
+	value_end.for_list:
+end
+
+state	ForNextVariable
+IDENTIFIER
+	for_post_next_variable:
+end
+
+state	ForPostNextVariable
+LSQUAREBRACKET
+	RSQUAREBRACKET
+	ext:
+EQUAL, AND_EQUAL, OR_EQUAL, XOR_EQUAL, PLUS_EQUAL, MINUS_EQUAL,
+	MULTIPLY_EQUAL, DIVIDE_EQUAL, REMAINDER_EQUAL, LEFT_SHIFT_EQUAL,
+	RIGHT_SHIFT_EQUAL, UNSIGNED_RIGHT_SHIFT_EQUAL
+	common.value
+	value_end.for_variable:
+LPAREN
+	common.value
+	value_end.arguments
+	value_end.for_variable:
+COMMA
+	for_next_variable:
+SEMICOLON
+	common.value
+	value_end.single_value
+	common.value
+	value_end.arguments:
+end
+
+state	ForTypeNext
+IDENTIFIER, SUPER, THIS
+	for_post_type_next:
+PLUS_PLUS, MINUS_MINUS
+	for_inc_dec
+	value_end.for_assignment:
+end
+
+state	ForPostTypeNext
+DOT
+	dot.check_for_type:
+LSQUAREBRACKET
+	common.value
+	RSQUAREBRACKET
+	ext:
+EQUAL, AND_EQUAL, OR_EQUAL, XOR_EQUAL, PLUS_EQUAL, MINUS_EQUAL,
+	MULTIPLY_EQUAL, DIVIDE_EQUAL, REMAINDER_EQUAL, LEFT_SHIFT_EQUAL,
+	RIGHT_SHIFT_EQUAL, UNSIGNED_RIGHT_SHIFT_EQUAL
+	common.value
+	value_end.for_assignment_next:
+LPAREN
+	common.value
+	value_end.arguments
+	value_end.for_assignment_next:
+COMMA
+	for_type_next:
+PLUS_PLUS, MINUS_MINUS
+	ext:
+end
+
+state	ForIncDec
+IDENTIFIER
+	for_post_inc_dec:
+end
+
+state	ForPostIncDec
+DOT
+	for_inc_dec:
+%:
+end
+
+state	DoValue
+WHILE
+	common.pre_brackets
+	statement
+	ext:
+IF
+	common.pre_brackets
+	statement
+	post_if
+	ext:
+DO
+	WHILE
+	common.pre_brackets
+	SEMICOLON
+	ext:
+FOR
+	LPAREN
+	for_type
+	statement
+	ext:
+TRY
+	try.prologue
+	ext:
+RCURLYBRACE:
+%
+	statement
+	ext:
+end
+
+state	Switch
+CASE
+	switch_case
+	COLON
+	ext:
+DEFAULT
+	COLON
+	ext:
+RCURLYBRACE:
+%
+	statement
+	ext:
+end
+
+state	SwitchCase
+% LPAREN, IDENTIFIER, PLUS, MINUS, INTEGER_LITERAL, LONG_LITERAL,
+	FLOATING_POINT_LITERAL, DOUBLE_LITERAL, THIS, CHARACTER_LITERAL
+	common.value:
+end
+
+state	PostIf
+ELSE
+	statement:
+%:
+end

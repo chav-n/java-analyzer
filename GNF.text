@@ -1,0 +1,17 @@
+Type: SimpleType Type
+SimpleType: [do] DoClause
+DoClause: SimpleType PostDo
+DoClause: [try] TryClause PostDo
+PostDo: [while] '(' ValueBrackets SEMICOLON
+TryClause: TryHead Type PostTry
+PostTry: [catch] CatchClause
+PostTry: [finally] FinallyClause
+CatchClause: CatchHead Type PostCatch
+PostCatch: [catch] CatchClause
+PostCatch: [finally] FinallyClause
+FinallyClause: FinallyHead Type
+
+Type: SimpleType Type
+SimpleType: [if] BlockClause
+BlockClause: SimpleType
+BlockClause: [try] TryClause
