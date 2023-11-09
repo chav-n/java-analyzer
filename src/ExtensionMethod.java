@@ -619,6 +619,7 @@ public class ExtensionMethod
 		case DOUBLE_LITERAL:
 		case THIS:
 		case CHARACTER_LITERAL:
+    case STRING_LITERAL:
 			return ext_common.ext_value(token_ID);
 		case INVALID:
 		default:

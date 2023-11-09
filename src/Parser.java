@@ -1,9 +1,9 @@
 import	java.io.PrintStream;
 import	java.io.IOException;
 
-import	scanner.Scanner;
+//import	scanner.Scanner;
 import	scanner.InvalidInputException;
-import	scanner.ClassFileConstants;
+//import	scanner.ClassFileConstants;
 
 public		class	Parser
 	implements	EXTENSION_SET,

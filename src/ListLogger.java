@@ -103,7 +103,7 @@ public		class	ListLogger
 	{
 		try
 		{
-			for	( int run  =  0; run  <  5; run++ )
+			for	( int run  =  0; run  <  0; run++ )
 			{
 				parse_logger . parse ( "..\\samples\\Parser.java" );
 			}

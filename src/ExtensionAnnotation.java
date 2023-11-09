@@ -77,15 +77,19 @@ public class ExtensionAnnotation
 	protected int ext_post_identifier(int token_ID)
 	{
 		if	(debug_out != null) debug_out.println(ext_post_identifier_name+": "+Lexer.get_token_name(token_ID));
-		switch(token_ID)
-		{
-		case DOT:
-			return ext_post_argument(ext_dot_identifier(Lexer.next_token()));
-		default:
-			return ext_post_argument(token_ID);
-		case INVALID:
-			return parse_error(ext_post_identifier_name, token_ID);
-		}
+    for (;;)
+    {
+      switch(token_ID)
+      {
+      case DOT:
+        token_ID = ext_dot_identifier(Lexer.next_token());
+        continue;
+      default:
+        return ext_post_argument(token_ID);
+      case INVALID:
+        return parse_error(ext_post_identifier_name, token_ID);
+      }
+    }
 	}
 	protected int ext_post_argument(int token_ID)
 	{

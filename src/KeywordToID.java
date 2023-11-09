@@ -86,7 +86,7 @@ public		final	class	KeywordToID
 		name_map  = new short[map_length][128];
 		complexity  =  0;
 		key         = offset;
-		for	( int i :  0, i+1, name.length )
+		for	( int i = 0; i < name.length; i++ )
 		{
 			String	name_n;
 			int		name_n_length;
@@ -94,7 +94,7 @@ public		final	class	KeywordToID
 			name_n         = name[i];
 			name_n_length  = name_n . length ( );
 			next_array     =  0;
-			for	( int c :  0, c+1, name_n_length )
+			for	( int c = 0; c < name_n_length; c++)
 			{
 				int		array_value  =
 				  name_map[next_array][name_n . charAt ( c )];
@@ -128,7 +128,7 @@ public		final	class	KeywordToID
 		set_range ( name_map,  0, IDENTIFIER_INDEX, 'a', 'z' );
 		name_map[ 0]['_']  = IDENTIFIER_INDEX;
 		name_map[ 0]['$']  = IDENTIFIER_INDEX;
-		for	( int i :  0, i+1, name.length )
+		for	( int i = 0; i < name.length; i++ )
 		{
 			String   name_n;
 			int      name_n_length;
@@ -138,7 +138,7 @@ public		final	class	KeywordToID
 			name_n_length  = name_n . length ( );
 			next_array     =  0;
 			is_subset      = false;
-			for	( int c :  0, c+1, name_n_length )
+			for	( int c = 0; c < name_n_length; c++ )
 			{
 				char	next_char;
 				int		array_value;

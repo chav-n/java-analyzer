@@ -86,6 +86,22 @@ public		class	Lexer
 		token_start  = source_index;
 		token        = null;
 		token_count++;
+    switch (next_char) {
+    case '/':
+      switch (source[source_index + 1]) {
+      case '/':
+        ++source_index;
+        return read_line_comment ( source[++source_index] );
+      case '*':
+        ++source_index;
+        return read_block_comment ( source[++source_index] );
+      default:
+        break;
+      }
+      break;
+    case '"':
+			return	read_string_literal ( source[++source_index] );
+    }
 		for	(int next_index;;)
 		{
 			if	( next_char > EOF )
@@ -506,8 +522,16 @@ public		class	Lexer
 	}
 	private		static	int	read_integer_postfix ( char next_char )
 	{
+    int current_index;
 		switch	( next_char )
 		{
+    case '_':
+      current_index = ++source_index;
+      next_char = read_digits ( source[current_index] );
+      if (source_index == current_index)
+        return INVALID;
+      else
+        return read_fancy_integer ( next_char );
 		case 'l':
 		case 'L':
 			source_index++;
@@ -524,6 +548,27 @@ public		class	Lexer
 			return	INTEGER_LITERAL;
 		}
 	}
+  private   static  int read_fancy_integer ( char next_char )
+  {
+    int current_index;
+
+    switch ( next_char )
+    {
+    case '_':
+      current_index = ++source_index;
+      next_char = read_digits ( source[current_index] );
+      if (source_index == current_index)
+        return INVALID;
+      else
+        return read_fancy_integer ( next_char );
+		case 'l':
+		case 'L':
+			source_index++;
+			return	LONG_LITERAL;
+		default:
+			return	INTEGER_LITERAL;
+    }
+  }
 	private		static	int	read_float_postfix ( char next_char )
 	{
 		switch	( next_char )
